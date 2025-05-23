@@ -1,3 +1,4 @@
+import { validationConfig } from './validate.js';
 // @todo: Темплейт карточки
 
 // @todo: DOM узлы
@@ -157,3 +158,12 @@ cardForm.addEventListener('submit', (evt) => {
   closeModal(cardPopup);
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  renderCards();
+  enableValidation(validationConfig);
+  
+  const popups = document.querySelectorAll('.popup');
+  popups.forEach(popup => {
+    popup.classList.add('popup_is-animated');
+  });
+});
