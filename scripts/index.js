@@ -34,13 +34,33 @@ const placesList = document.querySelector('.places__list');
 
 // Функция создания карточки
 function createCard(cardData) {
+  // 1. Клонируем шаблон карточки
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   
-  cardElement.querySelector('.card__image').src = cardData.link;
-  cardElement.querySelector('.card__image').alt = cardData.name;
-  cardElement.querySelector('.card__title').textContent = cardData.name;
+  // 2. Наполняем карточку данными
+  const cardImage = cardElement.querySelector('.card__image');
+  const cardTitle = cardElement.querySelector('.card__title');
   
+  cardImage.src = cardData.link;
+  cardImage.alt = cardData.name;
+  cardTitle.textContent = cardData.name;
+
+  // 3. Добавляем обработчики (ваш код)
+  const deleteButton = cardElement.querySelector('.card__delete-button');
+  const likeButton = cardElement.querySelector('.card__like-button');
+
+  // Удаление карточки
+  deleteButton.addEventListener('click', (evt) => {
+    evt.target.closest('.card').remove();
+  });
+
+  // Лайк карточки
+  likeButton.addEventListener('click', (evt) => {
+    evt.target.classList.toggle('card__like-button_is-active');
+  });
+
+  // 4. Возвращаем готовую карточку
   return cardElement;
 }
 
@@ -97,4 +117,28 @@ profileForm.addEventListener('submit', (evt) => {
   profileName.textContent = profileForm.elements.name.value;
   profileJob.textContent = profileForm.elements.description.value;
   closeModal(profilePopup);
+});
+
+// Элементы для новой карточки
+const cardAddButton = document.querySelector('.profile__add-button');
+const cardPopup = document.querySelector('.popup_type_new-card');
+const cardForm = document.forms['new-place'];
+
+// Открытие попапа
+cardAddButton.addEventListener('click', () => {
+  cardForm.reset();
+  openModal(cardPopup);
+});
+
+// Добавление карточки
+cardForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  
+  const newCard = {
+    name: cardForm.elements['place-name'].value,
+    link: cardForm.elements.link.value
+  };
+  
+  placesList.prepend(createCard(newCard));
+  closeModal(cardPopup);
 });
