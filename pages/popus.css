@@ -9,3 +9,26 @@
   visibility: visible;
   transition: opacity 0.3s;
 }
+
+/* Стили для валидации */
+.popup__input_type_error {
+  border-bottom-color: #FF3333;
+}
+
+.popup__error_visible {
+  color: #FF3333;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
+
+.popup__button_disabled {
+  background-color: #E5E5E5;
+  color: #000000;
+  opacity: 0.2;
+  cursor: default;
+}
+
+.popup__button_disabled:hover {
+  opacity: 0.2;
+}
