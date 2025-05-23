@@ -77,3 +77,24 @@ document.addEventListener('DOMContentLoaded', renderCards);
 
 // @todo: Вывести карточки на страницу
 
+// Элементы профиля
+const profileEditButton = document.querySelector('.profile__edit-button');
+const profilePopup = document.querySelector('.popup_type_edit');
+const profileForm = document.forms['edit-profile'];
+const profileName = document.querySelector('.profile__title');
+const profileJob = document.querySelector('.profile__description');
+
+// Открытие попапа
+profileEditButton.addEventListener('click', () => {
+  profileForm.elements.name.value = profileName.textContent;
+  profileForm.elements.description.value = profileJob.textContent;
+  openModal(profilePopup);
+});
+
+// Сохранение профиля
+profileForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  profileName.textContent = profileForm.elements.name.value;
+  profileJob.textContent = profileForm.elements.description.value;
+  closeModal(profilePopup);
+});
