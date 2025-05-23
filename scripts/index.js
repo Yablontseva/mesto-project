@@ -32,6 +32,19 @@ const initialCards = [
 
 const placesList = document.querySelector('.places__list');
 
+// ====== Просмотр изображений ======
+const imagePopup = document.querySelector('.popup_type_image');
+const popupImage = imagePopup.querySelector('.popup__image');
+const popupCaption = imagePopup.querySelector('.popup__caption');
+
+// Функция открытия попапа с изображением
+function openImagePopup(cardData) {
+  popupImage.src = cardData.link;
+  popupImage.alt = cardData.name;
+  popupCaption.textContent = cardData.name;
+  openModal(imagePopup);
+}
+
 // Функция создания карточки
 function createCard(cardData) {
   // 1. Клонируем шаблон карточки
@@ -60,6 +73,7 @@ function createCard(cardData) {
     evt.target.classList.toggle('card__like-button_is-active');
   });
 
+  cardImage.addEventListener('click', () => openImagePopup(cardData));
   // 4. Возвращаем готовую карточку
   return cardElement;
 }
@@ -142,3 +156,4 @@ cardForm.addEventListener('submit', (evt) => {
   placesList.prepend(createCard(newCard));
   closeModal(cardPopup);
 });
+
