@@ -103,8 +103,6 @@ document.querySelectorAll('.popup__close').forEach(button => {
   });
 });
 
-// Инициализация
-document.addEventListener('DOMContentLoaded', renderCards);
 
 // @todo: Функция создания карточки
 
