@@ -130,3 +130,57 @@ cardForm.addEventListener('submit', (evt) => {
   placesList.prepend(newCard);
   closeModal(cardPopup);
 });
+
+// Валидация формы профиля
+function enableValidation(formElement) {
+  const inputs = Array.from(formElement.querySelectorAll('.popup__input'));
+  const submitButton = formElement.querySelector('.popup__button');
+  
+  function toggleButtonState() {
+    submitButton.disabled = !formElement.checkValidity();
+  }
+  
+  function showInputError(input, errorMessage) {
+    const errorElement = formElement.querySelector(`.popup__error_type_${input.name}`);
+    input.classList.add('popup__input_type_error');
+    errorElement.textContent = errorMessage;
+    errorElement.classList.add('popup__error_visible');
+  }
+  
+  function hideInputError(input) {
+    const errorElement = formElement.querySelector(`.popup__error_type_${input.name}`);
+    input.classList.remove('popup__input_type_error');
+    errorElement.textContent = '';
+    errorElement.classList.remove('popup__error_visible');
+  }
+  
+  function checkInputValidity(input) {
+    if (!input.validity.valid) {
+      showInputError(input, input.validationMessage);
+    } else {
+      hideInputError(input);
+    }
+  }
+  
+  inputs.forEach(input => {
+    input.addEventListener('input', () => {
+      checkInputValidity(input);
+      toggleButtonState();
+    });
+  });
+  
+  toggleButtonState();
+}
+
+// Включение валидации для формы профиля
+enableValidation(profileForm);
+
+// Обновленный обработчик отправки формы
+profileForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  if (profileForm.checkValidity()) {
+    profileName.textContent = nameInput.value;
+    profileDescription.textContent = descriptionInput.value;
+    closeModal(profilePopup);
+  }
+});
