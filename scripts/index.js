@@ -15,7 +15,7 @@ const popups = document.querySelectorAll('.popup');
 // Добавляем анимацию всем поп-апам
 popups.forEach(popup => popup.classList.add('popup_is-animated'));
 
-// Обработчик закрытия по Escape
+// Функция закрытия по Escape
 function handleEscClose(evt) {
   if (evt.key === 'Escape') {
     const openedPopup = document.querySelector('.popup_is-opened');
@@ -42,7 +42,9 @@ popups.forEach(popup => {
 
   // Оверлей
   popup.addEventListener('mousedown', (evt) => {
-    if (evt.target === popup) closeModal(popup);
+    if (evt.target === popup) {
+      closeModal(popup);
+    }
   });
 });
 
