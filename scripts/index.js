@@ -15,7 +15,7 @@ const popups = document.querySelectorAll('.popup');
 // Добавляем анимацию всем поп-апам
 popups.forEach(popup => popup.classList.add('popup_is-animated'));
 
-// Обработчик закрытия по Escape
+// Функция закрытия по Escape
 function handleEscClose(evt) {
   if (evt.key === 'Escape') {
     const openedPopup = document.querySelector('.popup_is-opened');
@@ -42,7 +42,9 @@ popups.forEach(popup => {
 
   // Оверлей
   popup.addEventListener('mousedown', (evt) => {
-    if (evt.target === popup) closeModal(popup);
+    if (evt.target === popup) {
+      closeModal(popup);
+    }
   });
 });
 
@@ -88,6 +90,47 @@ initialCards.forEach(cardData => {
   placesList.append(card);
 });
 
+// Валидация форм
+function enableValidation(formElement) {
+  const inputs = Array.from(formElement.querySelectorAll('.popup__input'));
+  const submitButton = formElement.querySelector('.popup__button');
+  
+  function toggleButtonState() {
+    submitButton.disabled = !formElement.checkValidity();
+  }
+  
+  function showInputError(input, errorMessage) {
+    const errorElement = formElement.querySelector(`.popup__error_type_${input.name}`);
+    input.classList.add('popup__input_type_error');
+    errorElement.textContent = errorMessage;
+    errorElement.classList.add('popup__error_visible');
+  }
+  
+  function hideInputError(input) {
+    const errorElement = formElement.querySelector(`.popup__error_type_${input.name}`);
+    input.classList.remove('popup__input_type_error');
+    errorElement.textContent = '';
+    errorElement.classList.remove('popup__error_visible');
+  }
+  
+  function checkInputValidity(input) {
+    if (!input.validity.valid) {
+      showInputError(input, input.validationMessage);
+    } else {
+      hideInputError(input);
+    }
+  }
+  
+  inputs.forEach(input => {
+    input.addEventListener('input', () => {
+      checkInputValidity(input);
+      toggleButtonState();
+    });
+  });
+  
+  toggleButtonState();
+}
+
 // ----- Редактирование профиля -----
 const editButton = document.querySelector('.profile__edit-button');
 const profileForm = profilePopup.querySelector('.popup__form[name="edit-profile"]');
@@ -95,6 +138,9 @@ const nameInput = profileForm.querySelector('.popup__input_type_name');
 const descriptionInput = profileForm.querySelector('.popup__input_type_description');
 const profileName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
+
+// Включение валидации для формы профиля
+enableValidation(profileForm);
 
 // Открытие поп-апа профиля и заполнение полей
 editButton.addEventListener('click', () => {
@@ -106,9 +152,11 @@ editButton.addEventListener('click', () => {
 // Сохранение изменений профиля
 profileForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  profileName.textContent = nameInput.value;
-  profileDescription.textContent = descriptionInput.value;
-  closeModal(profilePopup);
+  if (profileForm.checkValidity()) {
+    profileName.textContent = nameInput.value;
+    profileDescription.textContent = descriptionInput.value;
+    closeModal(profilePopup);
+  }
 });
 
 // ----- Добавление новой карточки -----
@@ -116,6 +164,9 @@ const addButton = document.querySelector('.profile__add-button');
 const cardForm = cardPopup.querySelector('.popup__form[name="new-place"]');
 const titleInput = cardForm.querySelector('.popup__input_type_card-name');
 const linkInput = cardForm.querySelector('.popup__input_type_url');
+
+// Включение валидации для формы добавления карточки
+enableValidation(cardForm);
 
 // Открытие формы добавления карточки и очистка полей
 addButton.addEventListener('click', () => {
@@ -126,7 +177,13 @@ addButton.addEventListener('click', () => {
 // Обработка отправки формы добавления карточки
 cardForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  const newCard = createCard({ name: titleInput.value, link: linkInput.value });
-  placesList.prepend(newCard);
-  closeModal(cardPopup);
+  if (cardForm.checkValidity()) {
+    const newCard = createCard({ 
+      name: cardForm.elements['place-name'].value, 
+      link: cardForm.elements.link.value 
+    });
+    placesList.prepend(newCard);
+    closeModal(cardPopup);
+    cardForm.reset();
+  }
 });
